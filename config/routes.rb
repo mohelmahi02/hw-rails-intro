@@ -1,4 +1,5 @@
+# config/routes.rb
 Rails.application.routes.draw do
+  root to: 'movies#index'
   resources :movies
-  root :to => redirect('/movies')
 end

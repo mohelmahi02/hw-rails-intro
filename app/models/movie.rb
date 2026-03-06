@@ -1,15 +1,13 @@
-class Movie < ApplicationRecord
-  # Returns all possible ratings
+class Movie < ActiveRecord::Base
   def self.all_ratings
     ['G', 'PG', 'PG-13', 'R']
   end
 
-  # Returns movies filtered by ratings array
   def self.with_ratings(ratings_list)
-    if ratings_list.present?
-      where(rating: ratings_list)
-    else
+    if ratings_list.nil? || ratings_list.empty?
       all
+    else
+      where(rating: ratings_list)
     end
   end
 end
