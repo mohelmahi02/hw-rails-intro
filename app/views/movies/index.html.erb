@@ -19,7 +19,7 @@
 <% end %>
 
 <% @movies.each do |movie| %>
-  <div id="<%= dom_id(movie) %>" class="movie">
+  <div class= "movie">
     <strong><%= link_to movie.title, movie_path(movie) %></strong>
     | Rating: <%= movie.rating %>
     | Release Date: <%= movie.release_date %>
