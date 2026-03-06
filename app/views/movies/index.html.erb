@@ -18,14 +18,16 @@
   <%= button_tag 'Refresh', type: 'submit', id: 'ratings_submit', class: 'btn btn-primary' %>
 <% end %>
 
-<% @movies.each do |movie| %>
-  <div class= "movie">
-    <strong><%= link_to movie.title, movie_path(movie) %></strong>
-    | Rating: <%= movie.rating %>
-    | Release Date: <%= movie.release_date %>
-    | <%= link_to "Edit", edit_movie_path(movie) %>
-    | <%= link_to "Delete", movie_path(movie), method: :delete, data: { confirm: "Are you sure?" } %>
-  </div>
-<% end %>
+<div id="movies">
+  <% @movies.each do |movie| %>
+    <div class="movie">
+      <strong><%= link_to movie.title, movie_path(movie) %></strong>
+      | Rating: <%= movie.rating %>
+      | Release Date: <%= movie.release_date %>
+      | <%= link_to "Edit", edit_movie_path(movie) %>
+      | <%= link_to "Delete", movie_path(movie), method: :delete, data: { confirm: "Are you sure?" } %>
+    </div>
+  <% end %>
+</div>
 
 <%= link_to "Add new movie", new_movie_path, class: "btn btn-success" %>
