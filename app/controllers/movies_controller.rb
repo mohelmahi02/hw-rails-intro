@@ -2,27 +2,26 @@ class MoviesController < ApplicationController
   before_action :set_movie, only: %i[show edit update destroy]
 
   def index
-  @all_ratings = Movie.all_ratings
+    @all_ratings = Movie.all_ratings
+    if params[:ratings]
+      @ratings_to_show = params[:ratings].keys
+      session[:ratings_to_show] = @ratings_to_show
+    elsif session[:ratings_to_show]
+      @ratings_to_show = session[:ratings_to_show]
+    else
+      @ratings_to_show = Movie.all_ratings
+    end
 
-  if params[:ratings]
-    @ratings_to_show = params[:ratings].keys
-    session[:ratings_to_show] = @ratings_to_show
-  elsif session[:ratings_to_show]
-    @ratings_to_show = session[:ratings_to_show]
-  else
-    @ratings_to_show = Movie.all_ratings
+    if params[:sort_by]
+      @sort_by = params[:sort_by]
+      session[:sort_by] = @sort_by
+    elsif session[:sort_by]
+      @sort_by = session[:sort_by]
+    end
+
+    @movies = Movie.with_ratings(@ratings_to_show)
+    @movies = @movies.order(@sort_by) if @sort_by.present?
   end
-
-  if params[:sort_by]
-    @sort_by = params[:sort_by]
-    session[:sort_by] = @sort_by
-  elsif session[:sort_by]
-    @sort_by = session[:sort_by]
-  end
-
-  @movies = Movie.with_ratings(@ratings_to_show)
-  @movies = @movies.order(@sort_by) if @sort_by.present?
-end
 
   def show
   end

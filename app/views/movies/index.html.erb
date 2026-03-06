@@ -8,25 +8,32 @@
       <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
     </div>
   <% end %>
-  <%= hidden_field_tag :sort_by, @sort_by if @sort_by.present? %>
+
+  <div>
+    <label class="form-label me-2" for="sort_by">Sort by:</label>
+    <%= select_tag :sort_by,
+                   options_for_select([["Title", "title"],
+                                       ["Release date", "release_date"]],
+                                       @sort_by),
+                   id: "sort_by",
+                   class: "form-select d-inline w-auto" %>
+  </div>
+
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
 <% end %>
 
 <table>
   <thead>
     <tr>
-      <th>
-        <%= link_to "Title", movies_path(sort_by: "title", ratings: Hash[@ratings_to_show.map { |r| [r, 1] }]) %>
-      </th>
+      <th>Title</th>
       <th>Rating</th>
-      <th>
-        <%= link_to "Release Date", movies_path(sort_by: "release_date", ratings: Hash[@ratings_to_show.map { |r| [r, 1] }]) %>
-      </th>
+      <th>Release Date</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     <% @movies.each do |movie| %>
+      <div class="movie">
       <tr>
         <td><%= link_to movie.title, movie_path(movie) %></td>
         <td><%= movie.rating %></td>
@@ -36,6 +43,7 @@
           <%= link_to "Delete", movie_path(movie), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
         </td>
       </tr>
+      </div>
     <% end %>
   </tbody>
 </table>
