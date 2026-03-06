@@ -4,8 +4,8 @@ class MoviesController < ApplicationController
  def index
   @all_ratings = Movie.all_ratings
 
-  if params[:commit] == 'Refresh'
-    @ratings_to_show = params[:ratings] ? params[:ratings].keys : Movie.all_ratings
+  if params[:ratings]
+    @ratings_to_show = params[:ratings].keys
     session[:ratings_to_show] = @ratings_to_show
   elsif session[:ratings_to_show]
     @ratings_to_show = session[:ratings_to_show]
