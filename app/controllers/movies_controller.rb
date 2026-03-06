@@ -1,38 +1,34 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: %i[show edit update destroy]
 
-  # GET /movies
   def index
     @all_ratings = Movie.all_ratings
 
-    # ---- Ratings filtering ----
-    if params[:ratings].present? && params[:ratings].any?
+    if params[:ratings]
       @ratings_to_show = params[:ratings].keys
-      session[:ratings] = params[:ratings]
-    elsif params[:ratings].present? && params[:ratings].empty?
-      @ratings_to_show = @all_ratings
-      session[:ratings] = Hash[@all_ratings.map { |r| [r, 1] }]
-    elsif session[:ratings].present?
-      redirect_to movies_path(ratings: session[:ratings], sort_by: session[:sort_by]) and return
+      session[:ratings_to_show] = @ratings_to_show
+    elsif session[:ratings_to_show]
+      @ratings_to_show = session[:ratings_to_show]
     else
-      @ratings_to_show = @all_ratings
+      @ratings_to_show = Movie.all_ratings
     end
 
-    # ---- Sorting ----
-    if params[:sort_by].present?
+    if params[:sort_by]
       @sort_by = params[:sort_by]
       session[:sort_by] = @sort_by
-    else
+    elsif session[:sort_by]
       @sort_by = session[:sort_by]
     end
 
-    # ---- Fetch movies ----
     @movies = Movie.with_ratings(@ratings_to_show)
     @movies = @movies.order(@sort_by) if @sort_by.present?
   end
 
   def show; end
-  def new; @movie = Movie.new; end
+
+  def new
+    @movie = Movie.new
+  end
 
   def create
     @movie = Movie.new(movie_params)
