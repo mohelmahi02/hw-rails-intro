@@ -5,7 +5,7 @@ class MoviesController < ApplicationController
   @all_ratings = Movie.all_ratings
 
   if params[:ratings]
-    @ratings_to_show = params[:ratings].keys
+    @ratings_to_show = params[:ratings].keys.map(&:to_s)
     session[:ratings_to_show] = @ratings_to_show
   elsif session[:ratings_to_show]
     @ratings_to_show = session[:ratings_to_show]
