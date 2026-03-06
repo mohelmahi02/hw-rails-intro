@@ -1,35 +1,38 @@
 <h1>All Movies</h1>
 
-<%= form_tag movies_path, method: :get, id: 'ratings_form', data: {turbo: false} do %>
-  Include:
-  <% @all_ratings.each do |rating| %>
-    <div class="form-check form-check-inline">
-      <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), class: 'form-check-input' %>
-      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
-    </div>
-  <% end %>
+<%= form_tag movies_path, method: :get, id: 'ratings_form', data: { turbo: false } do %>
+  <fieldset>
+    <legend>Filter by ratings:</legend>
+    <% @all_ratings.each do |rating| %>
+      <div class="form-check form-check-inline">
+        <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), id: "ratings_#{rating}", class: "form-check-input" %>
+        <%= label_tag "ratings_#{rating}", rating, class: "form-check-label" %>
+      </div>
+    <% end %>
+  </fieldset>
 
-  <div>
-    <label class="form-label me-2" for="sort_by">Sort by:</label>
+  <div class="mt-2 mb-2">
+    <label for="sort_by" class="form-label me-2">Sort by:</label>
     <%= select_tag :sort_by,
-                   options_for_select([["Title", "title"],
-                                       ["Release date", "release_date"]],
-                                       @sort_by),
+                   options_for_select([["Title", "title"], ["Release date", "release_date"]], @sort_by),
                    id: "sort_by",
                    class: "form-select d-inline w-auto" %>
   </div>
 
-  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
+  <%= submit_tag 'Refresh', class: "btn btn-primary" %>
 <% end %>
 
+<hr>
+
 <% @movies.each do |movie| %>
-  <div id="<%= dom_id movie %>" class="movie">
+  <div id="<%= dom_id(movie) %>" class="movie">
     <strong><%= link_to movie.title, movie_path(movie) %></strong>
     | Rating: <%= movie.rating %>
     | Release Date: <%= movie.release_date %>
     | <%= link_to "Edit", edit_movie_path(movie) %>
-    | <%= link_to "Delete", movie_path(movie), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    | <%= link_to "Delete", movie_path(movie), method: :delete, data: { confirm: "Are you sure?" } %>
   </div>
 <% end %>
 
-<%= link_to "Add new movie", new_movie_path %>
+<br>
+<%= link_to "Add new movie", new_movie_path, class: "btn btn-success" %>

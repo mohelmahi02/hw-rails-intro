@@ -1,13 +1,11 @@
-class Movie < ActiveRecord::Base
+class Movie < ApplicationRecord
+  # Returns all ratings actually in the database
   def self.all_ratings
-    ['G', 'PG', 'PG-13', 'R']
+    Movie.distinct.pluck(:rating)
   end
 
-  def self.with_ratings(ratings_list)
-    if ratings_list.nil? || ratings_list.empty?
-      all
-    else
-      where(rating: ratings_list)
-    end
+  # Filters movies by selected ratings
+  def self.with_ratings(ratings)
+    where(rating: ratings)
   end
 end
