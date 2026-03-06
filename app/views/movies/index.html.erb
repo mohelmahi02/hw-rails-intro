@@ -1,24 +1,26 @@
 <h1>All Movies</h1>
 
-<form id="ratings_form" action="/movies" method="get">
+<%= form_tag movies_path, method: :get, id: 'ratings_form', local: true do %>
   Include:
   <% @all_ratings.each do |rating| %>
     <div class="form-check form-check-inline">
-      <input type="checkbox" name="ratings[<%= rating %>]" id="ratings_<%= rating %>" value="1" class="form-check-input" <%= 'checked' if @ratings_to_show.include?(rating) %> />
-      <label class="form-check-label" for="ratings_<%= rating %>"><%= rating %></label>
+      <%= check_box_tag "ratings[#{rating}]", "1", @ratings_to_show.include?(rating), class: 'form-check-input' %>
+      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
     </div>
   <% end %>
 
   <div>
     <label class="form-label me-2" for="sort_by">Sort by:</label>
-    <select name="sort_by" id="sort_by" class="form-select d-inline w-auto">
-      <option value="title" <%= 'selected' if @sort_by == 'title' %>>Title</option>
-      <option value="release_date" <%= 'selected' if @sort_by == 'release_date' %>>Release date</option>
-    </select>
+    <%= select_tag :sort_by,
+                   options_for_select([["Title", "title"],
+                                       ["Release date", "release_date"]],
+                                       @sort_by),
+                   id: "sort_by",
+                   class: "form-select d-inline w-auto" %>
   </div>
 
-  <input type="submit" name="commit" value="Refresh" id="ratings_submit" class="btn btn-primary" />
-</form>
+  <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
+<% end %>
 
 <% @movies.each do |movie| %>
   <div id="<%= dom_id movie %>" class="movie">
