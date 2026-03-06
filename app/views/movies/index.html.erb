@@ -1,6 +1,6 @@
 <h1>All Movies</h1>
 
-<%= form_tag movies_path, method: :get, id: 'ratings_form', data: {turbo: false} local: true do %>
+<%= form_tag movies_path, method: :get, id: 'ratings_form', data: {turbo: false} do %>
   Include:
   <% @all_ratings.each do |rating| %>
     <div class="form-check form-check-inline">
