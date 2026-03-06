@@ -3,7 +3,18 @@ class MoviesController < ApplicationController
 
   # GET /movies or /movies.json
   def index
-    @movies = Movie.all
+    # Get all possible ratings from the model
+    @all_ratings = Movie.all_ratings
+
+    # Determine which ratings to show based on checkboxes
+    if params[:ratings]
+      @ratings_to_show = params[:ratings].keys
+    else
+      @ratings_to_show = @all_ratings
+    end
+
+    # Retrieve movies matching selected ratings
+    @movies = Movie.with_ratings(@ratings_to_show)
   end
 
   # GET /movies/1 or /movies/1.json
