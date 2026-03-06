@@ -22,30 +22,14 @@
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
 <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Rating</th>
-      <th>Release Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @movies.each do |movie| %>
-      <div class="movie">
-      <tr>
-        <td><%= link_to movie.title, movie_path(movie) %></td>
-        <td><%= movie.rating %></td>
-        <td><%= movie.release_date %></td>
-        <td>
-          <%= link_to "Edit", edit_movie_path(movie) %> |
-          <%= link_to "Delete", movie_path(movie), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-        </td>
-      </tr>
-      </div>
-    <% end %>
-  </tbody>
-</table>
+<% @movies.each do |movie| %>
+  <div class="movie">
+    <strong><%= link_to movie.title, movie_path(movie) %></strong>
+    | Rating: <%= movie.rating %>
+    | Release Date: <%= movie.release_date %>
+    | <%= link_to "Edit", edit_movie_path(movie) %>
+    | <%= link_to "Delete", movie_path(movie), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+  </div>
+<% end %>
 
 <%= link_to "Add new movie", new_movie_path %>
