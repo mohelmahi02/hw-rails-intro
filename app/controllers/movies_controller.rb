@@ -4,20 +4,21 @@ class MoviesController < ApplicationController
  def index
   @all_ratings = Movie.all_ratings
 
-  if params[:ratings]
-    @ratings_to_show = params[:ratings].keys
-    session[:ratings_to_show] = @ratings_to_show
-  elsif session[:ratings_to_show]
+  # If sort or ratings params present, save to session
+  if params[:ratings] || params[:sort_by]
+    session[:ratings_to_show] = params[:ratings] ? params[:ratings].keys : Movie.all_ratings
+    session[:sort_by] = params[:sort_by] if params[:sort_by]
     @ratings_to_show = session[:ratings_to_show]
+    @sort_by = session[:sort_by]
+  elsif session[:ratings_to_show] || session[:sort_by]
+    # Redirect with session params to make it RESTful
+    redirect_to movies_path(
+      ratings: session[:ratings_to_show].zip(Array.new(session[:ratings_to_show].length, '1')).to_h,
+      sort_by: session[:sort_by]
+    ) and return
   else
     @ratings_to_show = Movie.all_ratings
-  end
-
-  if params[:sort_by]
-    @sort_by = params[:sort_by]
-    session[:sort_by] = @sort_by
-  elsif session[:sort_by]
-    @sort_by = session[:sort_by]
+    @sort_by = nil
   end
 
   @movies = Movie.with_ratings(@ratings_to_show)
