@@ -2,33 +2,26 @@ class MoviesController < ApplicationController
   before_action :set_movie, only: %i[show edit update destroy]
 
   def index
-  @all_ratings = Movie.all_ratings
-  
-  if params[:ratings]
-    @selected_ratings = params[:ratings]
+    @all_ratings = Movie.all_ratings
+    sort = params[:sort_by] || session[:sort_by]
+    @selected_ratings = params[:ratings] || session[:ratings] || {}
+
+    if params[:sort_by] != session[:sort_by] || (params[:ratings] != session[:ratings] && !params[:ratings].nil?)
+      session[:sort_by] = sort
+      session[:ratings] = @selected_ratings
+      redirect_to movies_path(sort_by: sort, ratings: @selected_ratings) and return
+    end
+
+    session[:sort_by] = sort
     session[:ratings] = @selected_ratings
-  elsif session[:ratings]
-    @selected_ratings = session[:ratings]
-  else
-    @selected_ratings = {}
+
+    @sort_by = sort
+    @movies = @selected_ratings.empty? ? Movie.all : Movie.where(rating: @selected_ratings.keys)
+    @movies = @movies.order(sort) if sort.present?
   end
 
-  sort = params[:sort_by] || session[:sort_by]
-  session[:sort_by] = sort
-  @sort_by = sort
-
-  if @selected_ratings.empty?
-    @movies = Movie.all
-  else
-    @movies = Movie.where(rating: @selected_ratings.keys)
-  end
-  @movies = @movies.order(sort) if sort.present?
-end
   def show; end
-
-  def new
-    @movie = Movie.new
-  end
+  def new; @movie = Movie.new; end
 
   def create
     @movie = Movie.new(movie_params)
