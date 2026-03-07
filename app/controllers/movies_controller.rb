@@ -10,7 +10,8 @@ class MoviesController < ApplicationController
     elsif session[:ratings]
       @selected_ratings = session[:ratings]
     else
-      @selected_ratings = {}
+      @selected_ratings = Movie.all_ratings.index_with("1")
+      session[:ratings] = @selected_ratings
     end
 
     if params[:sort_by]
@@ -20,14 +21,7 @@ class MoviesController < ApplicationController
       @sort_by = session[:sort_by]
     end
 
-    if params[:ratings] && @selected_ratings.empty?
-      @movies = Movie.none
-    elsif @selected_ratings.empty?
-      @movies = Movie.all
-    else
-      @movies = Movie.where(rating: @selected_ratings.keys)
-    end
-
+    @movies = Movie.where(rating: @selected_ratings.keys)
     @movies = @movies.order(@sort_by) if @sort_by.present?
   end
 
